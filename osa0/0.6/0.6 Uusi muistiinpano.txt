@@ -1,0 +1,14 @@
+note over selain:
+Käyttäjä täyttää haluamansa muistiinpanon
+tekstikenttään ja klikkaa "save"
+end note
+
+note over selain:
+Koodi luo muistiinpanon, lisää sen 
+muistiinpanojen listalle, piirtää ruudun 
+sisällön eli muistiinpanojen listan uudelleen 
+ja lähettää uuden muistiinpanon palvelimelle.
+end note
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+palvelin-->selain: Status Code 201 created
