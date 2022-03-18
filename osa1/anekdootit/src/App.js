@@ -12,16 +12,17 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState(Array(7).fill(0))
+  const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
 
   const setVote = () => {
-    const copy = { ...votes }
+    const copy = [ ...votes ]
     copy[selected] += 1
     setVotes(copy)
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>
         {anecdotes[selected]} <br/>
         has {votes[selected]} votes
@@ -34,6 +35,12 @@ const App = () => {
       <button onClick={() => setSelected(Math.floor(Math.random() * (anecdotes.length)))}>
           next anecdote
       </button>
+
+      <h1>Anecdote with most votes</h1>
+      <p>
+      {anecdotes[votes.indexOf(Math.max(...votes))]} <br/>
+        has {votes[votes.indexOf(Math.max(...votes))]} votes
+      </p>
     </div>
   )
 }
