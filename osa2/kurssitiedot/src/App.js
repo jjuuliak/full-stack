@@ -18,7 +18,7 @@ const Total = (props) => {
   let sum = 0
   props.p.map(prop => sum += prop.exercises)
   return (
-    <p>Number of exercises {sum}</p>
+    <p>total of {sum} exercises</p>
   )
 }
 
@@ -56,13 +56,18 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
 
   return (
     <div>
-      <Course course={course} />
+      <Course course={course}/>
     </div>
   )
 }
