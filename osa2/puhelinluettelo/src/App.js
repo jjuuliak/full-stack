@@ -6,6 +6,27 @@ const Person = (props) => {
   )
 }
 
+const Persons = (props) => {
+  return (
+  <div>
+    {props.personsToShow.map(person => 
+      <Person key={person.name} person={person} />
+    )}
+  </div>
+  )
+}
+
+const Filter = (props) => {
+  return (
+    <div>
+      filter shown with <input 
+        value={props.newFilter}
+        onChange={props.onChange}
+      />
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -57,12 +78,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input 
-          value={newFilter}
-          onChange={handleFilterChange}
-        />
-      </div>
+      <Filter newFilter={newFilter} onChange={handleFilterChange}/>
+
       <h2>add a new</h2>
       <form onSubmit={addInfo}>
         <div>
@@ -81,12 +98,10 @@ const App = () => {
           <button type="submit">add</button>
         </div>
       </form>
+      
       <h2>Numbers</h2>
-      <div>
-        {personsToShow.map(person => 
-          <Person key={person.name} person={person} />
-        )}
-      </div>
+      <Persons personsToShow={personsToShow}/>
+
     </div>
   )
 
