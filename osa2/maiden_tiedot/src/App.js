@@ -25,8 +25,9 @@ const OneCountry = (props) => {
 }
 
 const Country = (props) => {
+
   return (
-    <>{props.country}<br /></>
+    <>{props.country.name.common} <button onClick={() => props.onClick([props.country])}>show</button><br /></>
   )
 }
 
@@ -34,7 +35,7 @@ const Countries = (props) => {
   return (
   <div>
     {props.c.map(country => 
-      <Country key={country.name.official} country={country.name.common}/>
+      <Country key={country.name.common} country={country} onClick={props.onClick}/>
     )}
   </div>
   )
@@ -48,12 +49,12 @@ const Result = (props) => {
   } else if(props.countries.length === 1) {
     return (
       <div>
-        <OneCountry key={props.countries[0].name.official} country={props.countries[0]}/>
+        <OneCountry key={props.countries[0].name.common} country={props.countries[0]}/>
       </div>
     )
   } else {
     return (
-      <div><Countries c={props.countries}/></div>
+      <div><Countries c={props.countries} onClick={props.onClick}/></div>
     )
   }
 }
@@ -86,13 +87,13 @@ function App() {
 
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value)
-    setFilteredCountries(countries.filter(country => country.name.official.toLowerCase().match(event.target.value.toLowerCase())))
+    setFilteredCountries(countries.filter(country => country.name.common.toLowerCase().match(event.target.value.toLowerCase())))
   }
 
   return (
     <div>
       <Filter newFilter={newFilter} onChange={handleFilterChange}/>
-      <Result countries={filteredCountries}/>
+      <Result countries={filteredCountries} onClick={setFilteredCountries}/>
     </div>
   );
 }
