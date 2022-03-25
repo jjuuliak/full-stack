@@ -3,9 +3,23 @@ import axios from 'axios'
 
 const OneCountry = (props) => {
   const languages = Object.values(props.country.languages)
+  const api_key = process.env.REACT_APP_API_KEY
+  const lat = props.country.capitalInfo.latlng[0]
+  const lon = props.country.capitalInfo.latlng[1]
+  const [weather, setWeather] = useState()
+
+  useEffect(() => {
+    axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`)
+      .then(response => {
+        setWeather(response.data)
+      })
+  }, [])
 
   return (
     <div>
+      {weather &&
+      <>
       <h1>{props.country.name.common}</h1>
       <p>
         capital {props.country.capital[0]}<br/>
@@ -20,6 +34,12 @@ const OneCountry = (props) => {
         )}
       </ul>
       <img src={props.country.flags.png} width="170"/>
+
+      <h2>Weather in {props.country.capital[0]}</h2>
+      <p>temperature {(weather.main.temp - 276.47).toFixed(2)} Celcius</p>
+      <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} />
+      <p>wind {weather.wind.speed} m/s</p>
+      </>}
     </div>
   )
 }
@@ -75,6 +95,7 @@ function App() {
   const [countries, setCountries] = useState([])
   const [filteredCountries, setFilteredCountries] = useState([])
   const [newFilter, setNewFilter] = useState('')
+  const api_key = process.env.REACT_APP_API_KEY
 
   useEffect(() => {
     axios
