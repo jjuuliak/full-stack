@@ -67,6 +67,7 @@ const App = () => {
         setTimeout(() => {
           setMessage(null)
         }, 5000)
+        
     }
   }
 
@@ -93,6 +94,15 @@ const App = () => {
                 setMessage(null)
               }, 5000)
             })
+          .catch(error => {
+            setMessage(
+              [`Information of '${updatedPerson.name}' has already been removed from server`, false]
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+          })
+
       } else {
         setNewName('')
         setNewNumber('')
