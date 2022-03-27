@@ -4,17 +4,10 @@ import service from './services/details'
 
 const Person = (props) => {
   return (
-    <p>{props.person.name} {props.person.number}</p>
-  )
-}
-
-const Persons = (props) => {
-  return (
-  <div>
-    {props.personsToShow.map(person => 
-      <Person key={person.name} person={person} />
-    )}
-  </div>
+    <p key={props.person.id}>
+      {props.person.name} {props.person.number}
+      <button onClick={props.toDelete}>delete</button>
+    </p>
   )
 }
 
@@ -61,6 +54,15 @@ const App = () => {
     }
   }
 
+  const toDelete = person => {
+    const result = window.confirm('Delete ' + person.name + ' ?');
+    if(result) {
+      service
+        .deletePerson(person)
+        setPersons(persons.filter(p => p.id !== person.id))
+    }
+  }
+
   const addInfo = (event) => {
     event.preventDefault()
     const newObject = {
@@ -68,8 +70,20 @@ const App = () => {
       number: newNumber,
     }
     if(persons.some(p => p.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
-      return
+      const confirmation = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+      const updatedPerson = persons.find(p => p.name === newName)
+      if(confirmation) {
+        service
+          .update(updatedPerson.id, newObject)
+            .then(returnedPerson => {
+              setPersons(persons.map(per => per.id !== updatedPerson.id ? per : returnedPerson))
+              setNewName('')
+              setNewNumber('')
+            })
+      } else {
+        setNewName('')
+        setNewNumber('')
+      }
     } else {
       service
         .create(newObject)
@@ -110,7 +124,15 @@ const App = () => {
       </form>
       
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow}/>
+      <>
+        {personsToShow.map(person =>
+          <Person
+            key={person.id}
+            person={person}
+            toDelete={() => toDelete(person)}
+          />
+        )}
+      </>
 
     </div>
   )
