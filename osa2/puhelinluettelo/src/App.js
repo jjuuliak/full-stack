@@ -28,6 +28,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [actionMessage, setMessage] = useState(null)
 
   useEffect(() => {
     service
@@ -60,6 +61,12 @@ const App = () => {
       service
         .deletePerson(person)
         setPersons(persons.filter(p => p.id !== person.id))
+        setMessage(
+          [`${person.name} has been deleted`, false]
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
     }
   }
 
@@ -79,6 +86,12 @@ const App = () => {
               setPersons(persons.map(per => per.id !== updatedPerson.id ? per : returnedPerson))
               setNewName('')
               setNewNumber('')
+              setMessage(
+                [`${updatedPerson.name}'s phone number was updated`, true]
+              )
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
             })
       } else {
         setNewName('')
@@ -91,8 +104,35 @@ const App = () => {
           setPersons(persons.concat(returnedDetails))
           setNewName('')
           setNewNumber('')
+          setMessage(
+            [`Added ${returnedDetails.name}`, true]
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
       })
     }
+  }
+
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    if(message[1]) {
+      return (
+        <div className="success">
+          {message[0]}
+        </div>
+      )
+    } else {
+      return (
+        <div className="error">
+          {message[0]}
+        </div>
+      )
+    }
+
   }
 
   const personsToShow = showAll
@@ -101,7 +141,10 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+
+      <Notification message={actionMessage} />
+
       <Filter newFilter={newFilter} onChange={handleFilterChange}/>
 
       <h2>add a new</h2>
@@ -124,7 +167,7 @@ const App = () => {
       </form>
       
       <h2>Numbers</h2>
-      <>
+      <div className='person'>
         {personsToShow.map(person =>
           <Person
             key={person.id}
@@ -132,7 +175,7 @@ const App = () => {
             toDelete={() => toDelete(person)}
           />
         )}
-      </>
+      </div>
 
     </div>
   )
